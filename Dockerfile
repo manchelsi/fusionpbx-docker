@@ -1,7 +1,11 @@
-FROM debian:latest
+FROM debian:jessie
 MAINTAINER Darren Williams <support@directvoip.co.uk>
 
 # Install Required Dependencies
+RUN apt-get update
+RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+RUN apt-get install -y wget
+RUN  wget -O - https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y --force-yes \
@@ -14,7 +18,7 @@ RUN apt-get update \
 		libtiff5-dev \
 		libtiff-tools \
 		nginx \
-		php5 php5-cli php5-fpm php5-pgsql php5-sqlite php5-odbc php5-curl php5-imap php5-mcrypt wget curl openssh-server supervisor net-tools\
+		php7.0 php7.0-cli php7.0-fpm php7.0-pgsql php7.0-sqlite3 php7.0-odbc php7.0-curl php7.0-imap php7.0-mcrypt php7.0-xml curl openssh-server supervisor net-tools\
 	&& apt-get clean \
 	&& git clone https://github.com/fusionpbx/fusionpbx.git /var/www/fusionpbx 
 
@@ -69,9 +73,3 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start-freeswitch.sh /usr/bin/start-freeswitch.sh
 VOLUME ["/var/lib/postgresql", "/etc/freeswitch", "/var/lib/freeswitch", "/usr/share/freeswitch", "/var/www/fusionpbx"]
 CMD /usr/bin/supervisord -n
-
-
-
-
-
-
